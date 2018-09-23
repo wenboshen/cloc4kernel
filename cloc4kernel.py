@@ -8,6 +8,7 @@ copy_suffix= ["c", "C", "s", "S"]
 # find all .o files
 os.system("find . -name \"*.o\" > object_files")
 
+print "Copying C/Assembly files ..."
 with open("object_files") as objfile:
     for line in objfile:
         filename = line.strip()[:-1]
@@ -21,7 +22,7 @@ with open("object_files") as objfile:
 		newpath = os.path.dirname(newfile)
 		if not os.path.exists(newpath):
 		    os.makedirs(newpath)
-		print tocopy
+		#print tocopy
 		copyfile(tocopy, newfile)
                 break
 
@@ -29,8 +30,17 @@ with open("object_files") as objfile:
 # 1. the header files in linux include
 # 2. the header files in arch
 # 3. the header files located in same folder as c files
-search_dirs = ['./include/', './arch/arm64/include/', './arch/x86/include/']
+search_dirs = ['./include/']
+
+# for arm64, add arm64 folder, exclude x86 folder
+search_dirs.append('./arch/arm64/include/')
+
+# for x86, add x86 folder, exclude arm
+#search_dirs.append('./arch/x86/include/')
+
 os.system("grep \"#include\" ../cloc -ir > header_files")
+
+print "Copying Header files ..."
 with open("header_files") as headerfile:
     for line in headerfile:
         line = line.strip()
@@ -52,7 +62,7 @@ with open("header_files") as headerfile:
 
         # header files located in same folder as c files
         if line.endswith('"'):
-            print line[1:-1]
+            #print line[1:-1]
             cfile = cfile.strip()
             cfile = cfile.split(':')[0]
             cfile = cfile[8:]
@@ -65,7 +75,7 @@ with open("header_files") as headerfile:
     		newpath = os.path.dirname(newfile)
     		if not os.path.exists(newpath):
     		    os.makedirs(newpath)
-    		print tocopy
+    		#print tocopy
     		copyfile(tocopy, newfile)
     
 
