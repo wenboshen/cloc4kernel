@@ -9,8 +9,8 @@ cwd = os.getcwd()
 #print cwd
 cwd_folder = cwd.split('/')[-1]
 #print cwd_folder
-#cloc_folder = "../cloc_"+cwd_folder+"/"
-cloc_folder = "../cloc/"
+cloc_folder = "../cloc_"+cwd_folder+"/"
+#cloc_folder = "../cloc/"
 
 copy_suffix= ["c", "C", "s", "S"] 
 
@@ -22,6 +22,10 @@ with open("object_files") as objfile:
     for line in objfile:
         filename = line.strip()[:-1]
 
+        #ignore hidden files
+        basename = filename.split('/')[-1]
+        if basename.startswith('.'):
+            continue
         # for each o file, find the corresponding c/assembly file
         # and copy it to ../cloc
         for suffix in copy_suffix:
