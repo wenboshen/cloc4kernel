@@ -3,6 +3,14 @@ import os
 from subprocess import call
 from shutil import copyfile
 
+
+#get current folder name
+cwd = os.getcwd()
+#print cwd
+cwd_folder = cwd.split('/')[-1]
+#print cwd_folder
+cloc_folder = "../cloc_"+cwd_folder+"/"
+
 copy_suffix= ["c", "C", "s", "S"] 
 
 # find all .o files
@@ -18,7 +26,7 @@ with open("object_files") as objfile:
         for suffix in copy_suffix:
 	    tocopy = filename+suffix
 	    if os.path.isfile(tocopy):
-		newfile = "../cloc/"+tocopy
+		newfile = cloc_folder+tocopy
 		newpath = os.path.dirname(newfile)
 		if not os.path.exists(newpath):
 		    os.makedirs(newpath)
@@ -38,7 +46,7 @@ search_dirs.append('./arch/arm64/include/')
 # for x86, add x86 folder, exclude arm
 #search_dirs.append('./arch/x86/include/')
 
-os.system("grep \"#include\" ../cloc -ir > header_files")
+os.system("grep \"#include\" "+ cloc_folder +" -ir > header_files")
 
 print "Copying Header files ..."
 with open("header_files") as headerfile:
@@ -48,11 +56,13 @@ with open("header_files") as headerfile:
         tokens = line.split() 
         cfile = tokens[0]
         line = tokens[-1]
+
+        # for headers in linux include or arch
         if line.endswith('>'):
             for header_dir in search_dirs:
                 tocopy = header_dir + line[1:-1] 
                 if os.path.isfile(tocopy):
-    		    newfile = "../cloc/"+tocopy
+    		    newfile = cloc_folder+tocopy
     		    newpath = os.path.dirname(newfile)
     		    if not os.path.exists(newpath):
     		        os.makedirs(newpath)
@@ -71,7 +81,7 @@ with open("header_files") as headerfile:
             #print pathname
             tocopy = pathname + '/'+ line[1:-1] 
             if os.path.isfile(tocopy):
-    		newfile = "../cloc/"+tocopy
+    		newfile = cloc_folder+tocopy
     		newpath = os.path.dirname(newfile)
     		if not os.path.exists(newpath):
     		    os.makedirs(newpath)
