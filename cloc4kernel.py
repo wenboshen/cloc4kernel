@@ -5,11 +5,15 @@ from shutil import copyfile
 
 copy_suffix= ["c", "C", "s", "S"] 
 
+# find all .o files
 os.system("find . -name \"*.o\" > object_files")
 
 with open("object_files") as objfile:
     for line in objfile:
         filename = line.strip()[:-1]
+
+        # for each o file, find the corresponding c/assembly file
+        # and copy it to ../cloc
         for suffix in copy_suffix:
 	    tocopy = filename+suffix
 	    if os.path.isfile(tocopy):
@@ -21,8 +25,11 @@ with open("object_files") as objfile:
 		copyfile(tocopy, newfile)
                 break
 
-## handle for header files
-search_dirs = ['./include/', './arch/arm64/include/']
+# handle for 3 types of header files
+# 1. the header files in linux include
+# 2. the header files in arch
+# 3. the header files located in same folder as c files
+search_dirs = ['./include/', './arch/arm64/include/', './arch/x86/include/']
 os.system("grep \"#include\" ../cloc -ir > header_files")
 with open("header_files") as headerfile:
     for line in headerfile:
@@ -43,6 +50,7 @@ with open("header_files") as headerfile:
     		    copyfile(tocopy, newfile)
                     break
 
+        # header files located in same folder as c files
         if line.endswith('"'):
             print line[1:-1]
             cfile = cfile.strip()
