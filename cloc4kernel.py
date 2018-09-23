@@ -9,7 +9,8 @@ cwd = os.getcwd()
 #print cwd
 cwd_folder = cwd.split('/')[-1]
 #print cwd_folder
-cloc_folder = "../cloc_"+cwd_folder+"/"
+#cloc_folder = "../cloc_"+cwd_folder+"/"
+cloc_folder = "../cloc/"
 
 copy_suffix= ["c", "C", "s", "S"] 
 
@@ -75,7 +76,7 @@ with open("header_files") as headerfile:
             #print line[1:-1]
             cfile = cfile.strip()
             cfile = cfile.split(':')[0]
-            cfile = cfile[8:]
+            cfile = cfile[len(cloc_folder):]
             pathname = os.path.dirname(cfile)
             #print cfile
             #print pathname
