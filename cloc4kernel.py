@@ -46,10 +46,10 @@ with open("object_files") as objfile:
 search_dirs = ['./include/']
 
 # for arm64, add arm64 folder, exclude x86 folder
-search_dirs.append('./arch/arm64/include/')
+#search_dirs.append('./arch/arm64/include/')
 
 # for x86, add x86 folder, exclude arm
-#search_dirs.append('./arch/x86/include/')
+search_dirs.append('./arch/x86/include/')
 
 os.system("grep \"#include\" "+ cloc_folder +" -ir > header_files")
 
